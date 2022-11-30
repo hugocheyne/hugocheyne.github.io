@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            overflow: hidden;
+        }
+        canvas {
+            background: #000;
+        }
+    </style>
     <link rel="stylesheet" href="css/style.css" type="text/css">
     <title>Hugo Cheyne</title>
 </head>
@@ -13,5 +24,51 @@
   <p> <a href="https://www.linkedin.com/in/hugocheyne/">On LinkedIn</a></p>
   <p><a href="https://twitter.com/hugocheyne">On Twitter</a></p>
   <p><a href="https://medium.com/@hugocheyne">On Medium</a></p>
+    <canvas id="canvas"></canvas>
+    <script>
+        var canvas = document.getElementById("canvas");
+        var ctx = canvas.getContext("2d");
+        var W = window.innerWidth;
+        var H = window.innerHeight;
+        canvas.width = W;
+        canvas.height = H;
+        var particles = [];
+        for (var i = 0; i < 25; i++) {
+            particles.push(new createParticle());
+        }
+        function createParticle() {
+            this.x = Math.random() * W;
+            this.y = Math.random() * H;
+            this.vx = Math.random() * 20 - 10;
+            this.vy = Math.random() * 20 - 10;
+            this.radius = Math.random() * 20 + 20;
+            this.draw = function() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+                ctx.fillStyle = "rgba(255,255,255,0.2)";
+                ctx.fill();
+            }
+        }
+        function draw() {
+            ctx.clearRect(0, 0, W, H);
+            for (var i = 0; i < particles.length; i++) {
+                p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                if (p.x + p.radius > W)
+                    p.x = p.radius;
+                else if (p.x - p.radius < 0) {
+                    p.x = W - p.radius;
+                }
+                if (p.y + p.radius > H)
+                    p.y = p.radius;
+                else if (p.y - p.radius < 0) {
+                    p.y = H - p.radius;
+                }
+                p.draw();
+            }
+        }
+        setInterval(draw, 30);
+    </script>
 </body>
 </html>
